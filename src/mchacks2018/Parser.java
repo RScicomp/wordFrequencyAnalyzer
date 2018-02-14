@@ -3,8 +3,15 @@ package mchacks2018;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+package mchacks2018;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.*;
 
 public class Parser {
     public Parser() { }
@@ -29,12 +36,14 @@ public class Parser {
     private static ArrayList<String> fillCommon(String commonWordsDatabase) throws IOException {
         ArrayList<String> commonWords = new ArrayList<>();
         BufferedReader in = new BufferedReader(new FileReader(commonWordsDatabase));
-        while ((in.readLine()) != null) {
-            String commonWord = in.readLine();
+        String commonWord;
+        while ((commonWord = in.readLine()) != null) {
+            //String commonWord = in.readLine();
             commonWords.add(commonWord);
         }
         in.close();
         return commonWords;
+        
     }
 
     private static boolean isNotCommon(String word, ArrayList<String> commonWords) {
@@ -62,24 +71,40 @@ public class Parser {
     public void sortByFrequency(String documentFile, String commonWordsDatabase, String outputFile) {
         try {
             ArrayList<String> commonWords = fillCommon(commonWordsDatabase);
+            System.out.println(commonWords);
             ArrayList<String> document = readText(documentFile);
             HashMap<String, Integer> data = analyze(document, commonWords);
             List<Integer> values = new ArrayList<>(data.values());
             List<String> keys = new ArrayList<>(data.keySet());
             values.sort(Collections.reverseOrder());
             keys.sort(Collections.reverseOrder());
-
+            
+           
+            
+            
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-            for (int i = 0; i < values.size(); i++)
-                writer.write(keys.get(i) + ":" + values.get(i) + "\n");
+            System.out.println(data);
+            for (int i = 0; i < 10; i++){
+            	writer.write(keys.get(i) + ":" + data.get(keys.get(i)) + "\n");
+            }
+      
             writer.close();
 
-            BufferedWriter topWriter = new BufferedWriter(new FileWriter("top.txt"));
-            for (int j = 0; j < 10; j++)
-                topWriter.write(keys.get(j) + ":" + values.get(j) + "\n");
-            topWriter.close();
+            /*BufferedWriter topWriter = new BufferedWriter(new FileWriter("top.txt"));
+            int count = 0;
+            for (Map.Entry<String, Integer> entry : data.entrySet()){	
+   				writer.write(entry.getKey() + ":" + entry.getValue() + "\n");
+   				if (count = 10){
+   					break;
+   				}
+   				count++;
+			}
+            topWriter.close();*/
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+   
+    
+    
 }
